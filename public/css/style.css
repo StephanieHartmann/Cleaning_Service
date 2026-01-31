@@ -70,20 +70,54 @@ a { color: inherit; text-decoration: none;}
 table{
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
+    margin-top: 20px;
+}
+
+th, td {
+    text-align: center;
+    padding: 15px;
+    color: var(--muted);
+    font-size: 14px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: middle;
 }
 
 th {
-    text-align: left;
-    padding: 12px;
-    color: var(--muted);
-    font-size: 14px;
-    border-bottom: 2px solid var(--line);
+    background-color: #f8f9fa;
+    color: var(--primary);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.85em;
+    letter-spacing: 0.5px;
 }
 
-.status-new {color: #007bff; font-weight: bold; }
-.status-scheduled { color: #fd7e14; font-weight: bold;}
-.status-done { color: #28a745; font-weight: bold;}
+span[class^="status-"] {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.8em;
+    color: white;
+    text-transform: uppercase;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+    min-width: 80px;
+    text-align: center;
+}
+
+.status-new {
+    background-color: #3498db;
+ }
+
+.status-scheduled { background-color: #f39c12;
+}
+
+.status-completed { 
+    background-color: #27ae60;
+}
+
+.status-cancelled { 
+    background-color: #95a5a6;
+}
 
 input, select, textarea {
     width: 100%;
@@ -107,7 +141,14 @@ input, select, textarea {
         margin: 0;
         padding: 0;
     }
-    .btn, .no-print, .header-actions {
+    .btn, .no-print, .header-actions, button, form {
         display: none !important;
+    }
+
+    span[class^="status-"] {
+        border: 1px solid #000;
+        color: #000;
+        background-color: transparent !important;
+        box-shadow: none;
     }
 }

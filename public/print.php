@@ -7,19 +7,24 @@ if (!isset($_GET['id'])) {
 $order_id = $_GET['id'];
 
 try {
-    $stmt = $pdo->prepare("
-    SELECT so *, e.name as employee_name
-    FROM ServiceOrder so
-    LEFT JOIN Employee e ON so.employee_id = e.employee_id
-    WHERE so.order_id = ?
-    ");
-
+    $stmt = $pdo->prepare("SELECT * FROM ServiceOrder WHERE order_id = ?");
     $stmt->execute([$order_id]);
     $order = $stmt->fetch();
 
     if (!$order) die("Order not found.");
+
+    
+    $order['employee_name'] = 'Not Assigned'; 
+    if (!empty($order['employee_id'])) {
+        $stmtEmp = $pdo->prepare("SELECT name FROM Employee WHERE employee_id = ?");
+        $stmtEmp->execute([$order['employee_id']]);
+        $emp = $stmtEmp->fetch();
+        if ($emp) {
+            $order['employee_name'] = $emp['name'];
+        }
+    }
 } catch (Exception $e) {
-    die("Error fetching order.");
+    die("Erro: " . $e->getMessage()); 
 }
 ?>
 
@@ -53,6 +58,13 @@ try {
             width: 150px;
             display: inline-block;
         }
+
+        .row { margin-bottom: 8px; }
+
+        @media print {
+            .no-print { display: none; }
+        }
+
     </style>
 </head>
 <body onload="window.print()"><div class="container">
@@ -67,30 +79,31 @@ try {
 
     <h3>Customer Information</h3>
     <div class="box">
-        <div><span class="label">Name:</span> <?= htmlspecialchars($order['customer_name']) ?></div>
+        <div class="row"><span class="label">Name:</span> <?= htmlspecialchars($order['first_name'] . ' ' . $order['last_name']) ?></div>
 
-        <div><span class="label">Address:</span> <?= htmlspecialchars($order['Address']) ?></div>
+        <div class="row"><span class="label">Address:</span> <?= htmlspecialchars($order['address']) ?></div>
 
-        <div><span class="label">Phone:</span> <?= htmlspecialchars($order['Phone']) ?></div>
+        <div class="row"><span class="label">Phone:</span> <?= htmlspecialchars($order['phone']) ?></div>
 
-        <div><span class="Email">Name:</span> <?= htmlspecialchars($order['Email']) ?></div>
+        <div class="row"><span class="label">Email:</span> <?= htmlspecialchars($order['email']) ?></div>
+
     </div>
 
      <h3>Service Details</h3>
      <div class="box">
-        <div><span class="label">Order ID:</span> #<?= $order['order_id'] ?></div>
+        <div class="row"><span class="label">Order ID:</span> #<?= $order['order_id'] ?></div>
 
-        <div><span class="label">Status:</span> #<?= $order['Status'] ?></div>
+        <div class="row"><span class="label">Status:</span> <?= htmlspecialchars($order['status']) ?></div>
 
-        <div><span class="label">Type:</span> #<?= $order['cleaning_type'] ?></div>
+        <div class="row"><span class="label">Type:</span> <?= htmlspecialchars($order['cleaning_type']) ?></div>
 
-        <div><span class="label">Size:</span> #<?= $order['size_sqm'] ?></div>
+        <div class="row"><span class="label">Size:</span> <?= htmlspecialchars($order['size_sqm']) ?> sqm</div>
 
-        <div><span class="label">Size:</span> #<?= $order['size_sqm'] ?> sqm</div>
+        <div class="row"><span class="label">Scheduled Date:</span> <?= htmlspecialchars($order['scheduled_at'] ?? 'Pending') ?></div>
 
-        <div><span class="label">Scheduled Date:</span> #<?= $order['scheduled_at'] ?></div>
+        <div class="row"><span class="label">Employee:</span> <?= htmlspecialchars($order['employee_name']) ?></div>
 
-        <div><span class="label">Employee:</span> #<?= htmlspecialchars($order ['employee_name'] ?? 'Not Assigned') ?></div>
+    </div>
 </div>
 
 <?php if ($order['status'] === 'Done' || $order['status'] === 'Invoiced'): ?>
@@ -114,8 +127,10 @@ try {
         </div>
         
         <div class="no-print" style="margin-top: 30px; text-align: center;">
-            <a href="view.php?id=<?= $order_id ?>" class="btn btn-secondary">Back to Details</a>
-        </div>
+        <a href="view.php?id=<?= $order_id ?>" style="display: inline-block; padding: 10px 20px; background-color: #ccc; color: #000; text-decoration: none; border-radius: 5px; font-weight: bold;">
+            Back to Details
+        </a>
+    </div>
 
     </div>
 

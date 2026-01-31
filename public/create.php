@@ -2,24 +2,37 @@
 require_once '../src/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    try {
+    try { 
+        if(empty($_POST['first_name']) || empty($_POST['last_name']) || 
+           empty($_POST['phone']) || empty($_POST['email']) || 
+           empty($_POST['street']) || empty($_POST['number']) || 
+           empty($_POST['zip']) || empty($_POST['city']) || 
+           empty($_POST['size_sqm'])) {
+            
+            throw new Exception("Please fill in all required fields.");
+        }
+
         $size = !empty($_POST['size_sqm']) ? $_POST['size_sqm'] : null;
 
-        $sql = "INSERT INTO ServiceOrder (customer_name, phone, email, address, cleaning_type, size_sqm)
-                VALUES (:name, :phone, :email, :address, :type, :size)";
+        $size = $_POST['size_sqm'];
+
+        $full_address = $_POST['street'] . ' ' . $_POST['number'] . ', ' . $_POST['zip'] . ' ' . $_POST['city'];
+
+        $sql = "INSERT INTO ServiceOrder (first_name, last_name, phone, email, address, cleaning_type, size_sqm)
+                VALUES (:fname, :lname, :phone, :email, :address, :type, :size)";
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
-            ':name' => $_POST['customer_name'],
+            ':fname' => $_POST['first_name'],
+            ':lname' => $_POST['last_name'],
             ':phone' => $_POST['phone'],
             ':email' => $_POST['email'],
-            ':address' => $_POST['address'],
+            ':address' => $full_address,
             ':type' => $_POST['cleaning_type'],
             ':size' => $size,
 
         ]);
 
-        
         header('Location: index.php');
         exit;
     } catch (Exception $e) {
@@ -49,11 +62,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        label {
-            display: block;
-            margin-bottom: 5px;
+        h1 { color: #4D403A; 
+        text-align: center; 
+        margin-bottom: 20px;
+        }
+
+        /* Required field*/
+        label { 
+            display: block; 
+            margin-bottom: 5px; 
             font-weight: bold;
             color: #4D403A; 
+        }
+
+        /* Red * */
+        .req-star { 
+            color: red; 
+            margin-left: 3px; 
         }
 
         input, select, textarea {
@@ -65,22 +90,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             box-sizing: border-box;
         }
 
+        .row-names { 
+            display: flex; 
+            gap: 15px;
+        }
+
+        .col-half { 
+            flex: 1; 
+        }
+
+
         .btn-group {
             display: flex;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        button, .btn-cancel {
+            padding: 10px 20px;
+            border-radius: 6px; 
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            flex: 1;
+            box-sizing: border-box;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            transition: background 0.3s;
+            justify-content: center;
+            white-space: nowrap;
         }
 
         button {
             background-color: #4D403A;
             color: white;
-            padding: 12px 20px;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            border-radius: 4px;
-            font-size: 16px;
-            flex: 1;
         }
 
         button:hover {
@@ -88,15 +134,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .btn-cancel {
-            background-color: #ccc;
-            color: #666;
-            text-decoration: none;
-            padding:  12px 20px;
-            border-radius: 4px;
-            text-align: center;
-            flex: 1;
-            display: inline-block;
+            background-color: #e0e0e0;
+            color: #4D403A;
         }
+
+        .btn-cancel:hover { 
+            background-color: #bbb; 
+        }
+
+        .error-msg { 
+            color: red; 
+            background: #ffe6e6; 
+            padding: 10px; 
+            border-radius: 4px; 
+            margin-bottom: 20px; 
+        }
+
     </style>
 </head>
 <body>
@@ -106,37 +159,80 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php if (isset($error)) echo "<p style='color:red'>$error</p>"; ?>
 
         <form method="POST"> 
-            <label>Customer Name:</label>
-            <input type="text" name="customer_name" required placeholder="e.g. Anna Zimmermann">
 
-            <label>Phone:</label>
-            <input type="text" name="phone" placeholder="+41 76 000 00 00">
+            <div class="row-names">
+                <div class="col-half">
+                    <label>First Name: <span class="req-star">*</span></label>
+                    <input type="text" name="first_name" required placeholder="e.g. Anna">
+                </div>
 
-            <label>Email:</label>
-            <input type="text" name="email" placeholder="anna@example.com">
+                <div class="col-half">
+                    <label>Last Name: <span class="req-star">*</span></label>
+                    <input type="text" name="last_name" required placeholder="e.g. Zimmermann">
+                </div>
+            </div>
 
-            <label>Address:</label>
-            <input type="text" name="address" placeholder="Main St 123">
+            <label>Phone: <span style="color:red">*</span></label>
+            <input type="tel" name="phone" required 
+               placeholder="+41 76 123 45 67" 
+               pattern="[\+0-9\s]+" 
+               title="Allow numbers, spaces and + (e.g. +41 76 000 00 00)">
 
-            <label>Cleaning Type:</label>
-            <select name="cleaning_type">
+            <label>Email: <span style="color:red">*</span></label>
+            <input type="email" name="email" required 
+               placeholder="name@example.com" 
+               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+               title="Must contain an @ and a domain (like .com)">
+
+            <label>Address: <span class="req-star">*</span></label>
+            <div style="display: flex; gap: 15px;">
+                <div style="flex: 3;">
+                    <input type="text" name="street" required placeholder="Street Name" style="margin-top: 0;">
+                </div>
+                <div style="flex: 1;">
+                    <input type="text" name="number" required
+                    placeholder="Nr." 
+                    style="margin-top: 0;"
+                    inputmode="numeric"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px; margin-top: 10px;">
+
+                <div style="flex: 1;">
+                    <input type="text" name="zip" required
+                    placeholder="ZIP" 
+                    style="margin-top: 0;"
+                    inputmode="numeric"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+
+                </div>
+
+                <div style="flex: 3;">
+                    <input type="text" name="city" required placeholder="City" style="margin-top: 0;">
+                </div>
+            </div>
+                
+
+            <label>Cleaning Type: <span class="req-star">*</span></label>
+            <select name="cleaning_type" required>
                 <option value="Regular">Regular</option>
                 <option value="Deep">Deep</option>
                 <option value="Windows">Windows</option>
+                <option value="Laundry">Laundry (Washing)</option>
+                <option value="Ironing">Ironing</option>
             </select>
 
-            <label>Size (Square Meters):</label>
-            <input type="number" name="size_sqm" placeholder="120">
+            <label>Size (Square Meters): <span class="req-star">*</span></label>
+            <input type="number" name="size_sqm" required placeholder="e.g. 120">
 
             <div style="margin-top: 20px; display:flex; gap: 10px;">
 
-            <button type="submit" class="btn" style="flex: 1;">Save Order</button>
-
-            </div>
-
-            <div style="margin-top: 20px; display: flex; gap: 10px;">
-
-            <a href="index.php" class="btn" style="background-color: #ccc; color: #333; text-align: center; width: 100px;">Cancel</a>
+            <div class="btn-group">
+                <button type="submit" class="btn btn-save">Save Order</button>
+                <a href="index.php" class="btn btn-cancel">Cancel</a>
 
             </div>
         </form>
