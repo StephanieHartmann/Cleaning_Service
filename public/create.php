@@ -1,10 +1,12 @@
 <?php
-require_once '../scr/db.php';
+require_once '../src/db.php';
 
-if ($_SERVER['RESQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
-        $sql = "INSERT INTO ServiceOrder (customer_name, phone, email, adresse, cleaning_type, size_sqm)
-        VALUES (:name, :phone, :email, :address, :type, :size)";
+        $size = !empty($_POST['size_sqm']) ? $_POST['size_sqm'] : null;
+
+        $sql = "INSERT INTO ServiceOrder (customer_name, phone, email, address, cleaning_type, size_sqm)
+                VALUES (:name, :phone, :email, :address, :type, :size)";
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
@@ -13,8 +15,10 @@ if ($_SERVER['RESQUEST_METHOD'] === 'POST') {
             ':email' => $_POST['email'],
             ':address' => $_POST['address'],
             ':type' => $_POST['cleaning_type'],
-            ':size' => $_POST['size_sqm'],
+            ':size' => $size,
+
         ]);
+
         
         header('Location: index.php');
         exit;
@@ -42,14 +46,29 @@ if ($_SERVER['RESQUEST_METHOD'] === 'POST') {
             background: white;
             padding: 30px;
             border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        input, select {
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #4D403A; 
+        }
+
+        input, select, textarea {
             width: 100%;
             padding: 10px;
             margin: 5px 0 20px;
             border: 1px solid #ccc;
             border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
         }
 
         button {
@@ -61,18 +80,22 @@ if ($_SERVER['RESQUEST_METHOD'] === 'POST') {
             width: 100%;
             border-radius: 4px;
             font-size: 16px;
+            flex: 1;
         }
 
         button:hover {
             background-color: #333;
         }
 
-        .cancel {
-            display: block;
-            text-align: center;
-            margin-top: 15px;
+        .btn-cancel {
+            background-color: #ccc;
             color: #666;
             text-decoration: none;
+            padding:  12px 20px;
+            border-radius: 4px;
+            text-align: center;
+            flex: 1;
+            display: inline-block;
         }
     </style>
 </head>
@@ -84,12 +107,15 @@ if ($_SERVER['RESQUEST_METHOD'] === 'POST') {
 
         <form method="POST"> 
             <label>Customer Name:</label>
-            <input type="text" name="customer_name" requied placeholder="e.g. Anna Zimmermann">
+            <input type="text" name="customer_name" required placeholder="e.g. Anna Zimmermann">
 
             <label>Phone:</label>
             <input type="text" name="phone" placeholder="+41 76 000 00 00">
 
             <label>Email:</label>
+            <input type="text" name="email" placeholder="anna@example.com">
+
+            <label>Address:</label>
             <input type="text" name="address" placeholder="Main St 123">
 
             <label>Cleaning Type:</label>
@@ -100,11 +126,19 @@ if ($_SERVER['RESQUEST_METHOD'] === 'POST') {
             </select>
 
             <label>Size (Square Meters):</label>
-            <input type="number" name="size_sqm" placeholder="120"
+            <input type="number" name="size_sqm" placeholder="120">
 
-            <button type="submit">Save Order</button>
+            <div style="margin-top: 20px; display:flex; gap: 10px;">
 
-            <a href="index.php" class="cancel">Cancel</a>
+            <button type="submit" class="btn" style="flex: 1;">Save Order</button>
+
+            </div>
+
+            <div style="margin-top: 20px; display: flex; gap: 10px;">
+
+            <a href="index.php" class="btn" style="background-color: #ccc; color: #333; text-align: center; width: 100px;">Cancel</a>
+
+            </div>
         </form>
     </div>
 </body>

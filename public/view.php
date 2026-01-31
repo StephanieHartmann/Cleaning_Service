@@ -7,22 +7,34 @@ if (!isset($_GET['id'])) {
 $order_id = $_GET['id'];
 
 $message = "";
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     $action = $_POST['action'];
 
     try {
-        if ($action === '^schedule') {
+        if ($action === 'schedule') {
 
-            $sql = "UPDATE ServiceOrder SET employee_id = :emp, schedule_at = :date, status = 'Scheduled' WHERE order_id = :id";
+            $sql = "UPDATE ServiceOrder SET employee_id = :emp, scheduled_at = :date, status = 'Scheduled' WHERE order_id = :id";
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([':emp' => $_POST['employee_id'], ':date => $_POST'['scheduled'], ':id' => $order_id]);
+
+            $stmt->execute([
+                ':emp' => $_POST['employee_id'], 
+                ':date' => $_POST['scheduled_at'], 
+                ':id' => $order_id
+            ]);
+
             $message = "Order successfully scheduled!";
             
         } elseif ($action === 'complete') {
 
-        $sql = "UPDATE ServiceOrder SET report_text = :report, hours_worked = :hours, status= 'Done' WHERE order_id = id";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([':report' => $_POST['report_text'], ':hours' => $_POST['hours_worked'], ':id' => $order_id]);
+        $sql = "UPDATE ServiceOrder SET report_text = :report, hours_worked = :hours, status= 'Done' WHERE order_id = :id";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                ':report' => $_POST['report_text'], 
+                ':hours' => $_POST['hours_worked'], 
+                ':id' => $order_id
+            ]);
+
         $message = "Order marked as done!";
 
         } elseif ($action === 'invoice') {
@@ -43,12 +55,16 @@ try {
     $stmt->execute([$order_id]);
     $order = $stmt->fetch();
 
-    $stmtEmp = $pdo->query("SELECT * FROM  Employee");
-    $employess = $stmtEmp->fetchAll();
+    if (!$order) {
+        die("Order not found!");
+    }
+
+   $stmtEmp = $pdo->query("SELECT * FROM Employee");
+   $employees = $stmtEmp->fetchAll();
 
     $assigned_employee = "Not assigned";
     if ($order['employee_id']) {
-        foreach($employess as $emp) {
+        foreach($employees as $emp) {
             if ($emp['employee_id'] == $order['employee_id']) {
                 $assigned_employee = $emp['name'];
                 break;

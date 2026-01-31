@@ -1,12 +1,12 @@
 <?php
 
-$host = 'localhost';
-$db = 'cleaning_service';
-$user = 'root';
-$pass = '';
-$port = '';
+$host = 'aws-1-eu-west-1.pooler.supabase.com';
+$db = 'postgres';
+$user = 'postgres.drlovtrxaxhnzdndbyxw';
+$pass = 'LFSRubemExhcf3YA';
+$port = '6543';
 
-$dsn = "pgsl:host=$host;port=$port;dbname=$db";
+$dsn = "pgsql:host=$host;port=$port;dbname=$db";
 
 try{
     $pdo = new PDO($dsn, $user, $pass, [
@@ -16,6 +16,6 @@ try{
     ]);
 } catch (PDOException $e) {
     //
-    die("Database Connection Error. (we wil fiy this later!)");
+    throw new Exception("Database Connection Error: " . $e->getMessage());
 }
 ?>
