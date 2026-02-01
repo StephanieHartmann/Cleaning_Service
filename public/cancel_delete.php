@@ -50,6 +50,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         header("Location: view.php?id=$id");
         exit;
+
+    } elseif ($action === 'invoice_order') {
+        // Mark as Invoiced
+        $sql = "UPDATE ServiceOrder 
+                SET status = 'Invoiced' 
+                WHERE order_id = :id";
+        
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+
+        header("Location: view.php?id=$id");
+        exit;
     }
 }
 

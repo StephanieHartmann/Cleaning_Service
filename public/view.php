@@ -149,6 +149,17 @@ try {
                         <input type="hidden" name="order_id" value="<?= $order['order_id'] ?>">
                         <button type="submit" style="background: #27ae60; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold;">Mark as Done
                         </button>
+
+                        <?php elseif ($order['status'] === 'Completed'): ?>
+                    <div style="background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                        <span style="font-weight:bold">Job Done!</span> Ready for billing.
+                    </div>
+                    
+                    <form action="cancel_delete.php" method="POST" onsubmit="return confirm('Mark this order as Billed/Invoiced?');">
+                        <input type="hidden" name="action" value="invoice_order">
+                        <input type="hidden" name="order_id" value="<?= $order['order_id'] ?>">
+                        <button type="submit" style="background: #8e44ad; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold;"> Mark as Invoiced
+                        </button>
                     </form>
 
                 <?php endif; ?>

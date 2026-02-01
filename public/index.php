@@ -33,23 +33,30 @@ try {
             <h1>Cleaning Orders</h1>
 
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                
+                <a href="create.php" class="btn" style="padding: 10px 20px; background-color: #4D403A; color: white; text-decoration: none; border-radius: 5px;">
+                    Create new order
+                </a>
 
-            <a href="create.php" class="btn" style="padding: 10px 20px; background-color: #4D403A; color: white; text-decoration: none; border-radius: 5px;">Create new order</a>
-
-            <form method="GET" style="margin: 0;">
-                <label style="font-weight: bold; margin-right: 5px;">Filter:</label>
-
-                <select name="status" onchange="this.form.submit()" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
-                    <option value="">All Statuses</option>
-                    <option value="New" <?= $status_filter === 'New' ? 'selected' : '' ?>>New</option>
-                    <option value="Scheduled" <?= $status_filter === 'Scheduled' ? 'selected' : '' ?>>Scheduled</option>
-                    <option value="Cancelled" <?= $status_filter === 'Cancelled' ? 'selected' : '' ?>>Cancelled</option>
-
-                    <option value="Completed" <?= $status_filter === 'Completed' ? 'selected' : '' ?>>Completed</option>
+                <div style="display: flex; align-items: center; gap: 10px;">
                     
-                </select>
-            </form>
-        </div>
+                    <input type="text" id="searchInput" placeholder="Search client..." 
+                           style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 200px;">
+
+                    <form method="GET" style="margin: 0; display: flex; align-items: center;">
+                        <label style="font-weight: bold; margin-right: 5px;">Filter:</label>
+                        <select name="status" onchange="this.form.submit()" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
+                            <option value="">All Statuses</option>
+                            <option value="New" <?= $status_filter === 'New' ? 'selected' : '' ?>>New</option>
+                            <option value="Scheduled" <?= $status_filter === 'Scheduled' ? 'selected' : '' ?>>Scheduled</option>
+                            <option value="Cancelled" <?= $status_filter === 'Cancelled' ? 'selected' : '' ?>>Cancelled</option>
+                            <option value="Completed" <?= $status_filter === 'Completed' ? 'selected' : '' ?>>Completed</option>
+                            <option value="Invoiced" <?= $status_filter === 'Invoiced' ? 'selected' : '' ?>>Invoiced</option>
+                        </select>
+                    </form>
+                </div>
+
+            </div>
 
             <table>
                 <thead>
@@ -104,5 +111,7 @@ try {
                 </tbody>
             </table>
         </div>
+        <script src="js/search.js"></script>
+
     </body>
 </html>
