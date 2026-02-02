@@ -173,10 +173,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <label>Phone: <span style="color:red">*</span></label>
-            <input type="tel" name="phone" required 
-               placeholder="+41 76 123 45 67" 
-               pattern="[\+0-9\s]+" 
-               title="Allow numbers, spaces and + (e.g. +41 76 000 00 00)">
+            <input type="tel" name="phone" required placeholder="+41 76 123 45 67" 
+            pattern="[\+0-9\s]+" 
+            title="Allow numbers, spaces and + (e.g. +41 76 000 00 00)"
+            oninput="this.value = this.value.replace(/[^0-9\s+]/g, '')">
 
             <label>Email: <span style="color:red">*</span></label>
             <input type="email" name="email" required 

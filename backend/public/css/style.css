@@ -119,6 +119,10 @@ span[class^="status-"] {
     background-color: #95a5a6;
 }
 
+.status-invoiced {
+    background-color: #8e44ad;
+}
+
 input, select, textarea {
     width: 100%;
     padding: 10px;
