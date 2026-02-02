@@ -4,7 +4,7 @@ Dieses Projekt ist eine Webanwendung zur Verwaltung von Serviceaufträgen. Es wu
 
 **Wichtiger Hinweis zur Infrastruktur:**
 *   **Datenbank**: Verwaltet via **Supabase** (PostgreSQL in der Cloud). Eine lokale Datenbank-Installation ist nicht erforderlich.
-*   **XAMPP**: Wird in diesem Projekt **ausschließlich** als PHP-Interpreter verwendet, um den Backend-Code auszuführen. Der Apache-Server oder MySQL von XAMPP werden nicht benötigt.
+*   **XAMPP**: Wird in diesem Projekt **ausschiesslich** als PHP-Interpreter verwendet, um den Backend-Code auszuführen. Der Apache-Server oder MySQL von XAMPP werden nicht benötigt.
 
 ## 🚀 Übersicht
 
@@ -67,7 +67,7 @@ Das Projekt läuft unter **`http://localhost:3000`**.
 
 ## ✅ Hauptfunktionen
 
-*   **Intelligente Validierung**: Das Formular warnt bei fehlenden Feldern oder ungültiger Größe (m²).
+*   **Intelligente Validierung**: Das Formular prüft Schweizer Telefonnummern-Formate (+41) und warnt bei fehlenden Feldern oder ungültiger Grösse (m²).
 *   **Optimierter Druck**: Beim Klick auf "Print" passt sich die Seite für A4-Papier an.
 *   **Interaktive Berichte**: Beim Abschluss eines Auftrags wird nach Arbeitsstunden und Notizen gefragt.
 *   **Clean Design**: Angepasste Farben (`#FAF8F5`, `#4D403A`) und responsive Benutzeroberfläche.

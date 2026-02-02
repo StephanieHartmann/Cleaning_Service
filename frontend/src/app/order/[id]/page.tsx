@@ -263,10 +263,14 @@ export default function OrderDetails() {
                         <textarea
                             required
                             rows={4}
+                            maxLength={450} // Limit to ensure it fits on one page
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
                             value={reportText}
                             onChange={(e) => setReportText(e.target.value)}
                         ></textarea>
+                        <p className="text-xs text-gray-500 text-right mt-1">
+                            {reportText.length}/450 characters (Limit to keep 1-page print)
+                        </p>
                     </div>
                     <div className="flex gap-3 pt-2">
                         <Button type="submit" className="flex-1 bg-green-600 hover:bg-green-700">Confirm</Button>

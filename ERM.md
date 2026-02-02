@@ -14,7 +14,7 @@ erDiagram
         string email "E-Mail"
         string address "Adresse"
         string cleaning_type "Reinigungsart"
-        decimal size_sqm "Größe in m²"
+        decimal size_sqm "Grösse in m²"
         string status "Status"
         date service_date "Datum"
         time service_time "Uhrzeit"
@@ -45,9 +45,9 @@ Dies ist die Haupttabelle der Anwendung, verantwortlich für die Speicherung all
 | **last_name** | `VARCHAR(100)` | Nachname des Kunden. |
 | **phone** | `VARCHAR(20)` | Telefonnummer für Kontakt. |
 | **email** | `VARCHAR(100)` | E-mail-Adresse für Kontakt und Rechnung. |
-| **address** | `TEXT` | Vollständige Adresse des Einsatzortes (Straße, Nr., PLZ, Ort). |
+| **address** | `TEXT` | Vollständige Adresse des Einsatzortes (Strasse, Nr., PLZ, Ort). |
 | **cleaning_type** | `VARCHAR(50)` | Art der Reinigung (z. B. 'Basic', 'Standard', 'Deep'). |
-| **size_sqm** | `DECIMAL(10,2)` | Größe der Fläche in m². |
+| **size_sqm** | `DECIMAL(10,2)` | Grösse der Fläche in m². |
 | **status** | `VARCHAR(20)` | Aktueller Status des Auftrags (Standard: 'New'). |
 | **service_date** | `DATE` | Geplantes Datum für den Service (bei Disposition ausgefüllt). |
 | **service_time** | `TIME` | Geplante Uhrzeit für den Service. |

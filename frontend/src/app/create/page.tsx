@@ -106,16 +106,15 @@ export default function CreateOrder() {
                             label="Phone"
                             name="phone"
                             type="tel"
-                            pattern="[0-9]*"
-                            inputMode="numeric"
+                            // Pattern allows +, spaces, and numbers. Min length 10 roughly covers valid numbers
                             value={formData.phone}
                             onChange={(e) => {
-                                // Allow only numbers
+                                // Allow numbers, spaces, and + at the beginning
                                 const val = e.target.value;
-                                if (/^\d*$/.test(val)) handleChange(e);
+                                if (/^[+]?[\d\s]*$/.test(val)) handleChange(e);
                             }}
                             required
-                            placeholder="Only numbers (e.g. 0791234567)"
+                            placeholder="+41 79 000 00 00"
                         />
                         <Input
                             label="Email"
