@@ -50,6 +50,10 @@ root/
 Da Frontend und Backend getrennt sind, müssen **zwei Terminals** geöffnet werden.
 
 ### 1. Backend starten (PHP)
+Zuerst die Datenbank-Verbindung konfigurieren: `backend/.env.example` nach `backend/.env` kopieren und die Werte (`DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`) eintragen. Die Datei `.env` wird nicht ins Repository übernommen.
+
+*(English: copy `backend/.env.example` to `backend/.env` and fill in your database connection values.)*
+
 Öffnen Sie ein Terminal im Hauptordner und führen Sie aus:
 ```bash
 cd backend

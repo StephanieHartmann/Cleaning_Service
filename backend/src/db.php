@@ -1,10 +1,21 @@
 <?php
 
-$host = 'aws-1-eu-west-1.pooler.supabase.com';
-$db = 'postgres';
-$user = 'postgres.drlovtrxaxhnzdndbyxw';
-$pass = 'LFSRubemExhcf3YA';
-$port = '6543';
+// Database connection settings come from environment variables.
+// For local development, copy backend/.env.example to backend/.env and fill in your values.
+$envFile = __DIR__ . '/../.env';
+if (is_readable($envFile)) {
+    foreach (file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
+        $line = trim($line);
+        if ($line === '' || $line[0] === '#' || strpos($line, '=') === false) continue;
+        putenv($line);
+    }
+}
+
+$host = getenv('DB_HOST');
+$db   = getenv('DB_NAME') ?: 'postgres';
+$user = getenv('DB_USER');
+$pass = getenv('DB_PASSWORD');
+$port = getenv('DB_PORT') ?: '5432';
 
 // CORS Headers
 header("Access-Control-Allow-Origin: *");
